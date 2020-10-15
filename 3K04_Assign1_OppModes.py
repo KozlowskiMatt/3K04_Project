@@ -136,7 +136,8 @@ class AOO_Mode(Frame):
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
 
-        #VALUES -> replace '0's with stored values (in the file)
+        #VALUES -> replace '0' with stored values (from the file)
+
         self.value1= Label(self, text='0') #LRL
         self.value1.place(relx=0.8, rely=0.5)
         self.value2= Label(self, text='0')#URL
@@ -159,10 +160,10 @@ class AOO_Mode(Frame):
 
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
-        #Labels = last saved entry values (if first time, then all = 0)
-        #When saved, store the entry values in text file.
 
-        #If the entry is EMPTY, then it is assumed 0.
+        #STORE NEW ENTRY VALUES IN TEXT FILE (replace old values)
+
+        #If statements are for when the entry is EMPTY, in which case it is assumed to be 0.
         if e1 != '':
             self.value1.config(text=e1)
         else:
