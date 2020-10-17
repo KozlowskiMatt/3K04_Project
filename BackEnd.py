@@ -32,7 +32,7 @@ def NewUser(name,passwrd):
     mycursor.execute("SELECT *FROM Prac ORDER BY personID DESC LIMIT 1 ")
     CREATING = True
     for i in mycursor:
-        if i[-1] >10: # To check if there is space to add a new user
+        if i[-1] <10: # To check if there is space to add a new user
             while (CREATING):
                 mycursor.execute("SELECT username,password FROM Prac")
                 user = True
