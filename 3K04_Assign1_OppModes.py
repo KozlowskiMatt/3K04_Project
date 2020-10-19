@@ -1,3 +1,4 @@
+
 from tkinter import *
 from tkinter import ttk
 
@@ -38,15 +39,23 @@ class WelcomeScreen(Frame):
         username.grid(row=1)
         password.grid(row=2)
 
-        userEntry = Entry(self)
-        passwordEntry = Entry(self)
-        userEntry.grid(row=1, column=1)
-        passwordEntry.grid(row=2, column=1)
+        self.userEntry = Entry(self)
+        self.passwordEntry = Entry(self)
+        self.userEntry.grid(row=1, column=1)
+        self.passwordEntry.grid(row=2, column=1)
 
-        login = Button(self, text="Login", command=lambda: master.switchFrame(HomePage))
+        login = Button(self, text="Login", command=lambda: self.login(master))
         newUser = Button(self, text="Create New User", command=lambda: master.switchFrame(NewUser))
         login.grid(row=3)
         newUser.grid(row=3, column=1)
+
+    def login(self, master):
+        ##################check if user/pass is valid here###################
+        loginUSERNAME = self.userEntry.get()
+        loginPASSWORD = self.passwordEntry.get()
+
+
+        master.switchFrame(HomePage)
                           
 class NewUser(Frame):
     def __init__(self, master):
@@ -60,13 +69,23 @@ class NewUser(Frame):
         username.grid(row=1)
         password.grid(row=2)
 
-        userEntry = Entry(self)
-        passwordEntry = Entry(self)
-        userEntry.grid(row=1, column=1)
-        passwordEntry.grid(row=2, column=1)
+        self.userEntry = Entry(self)
+        self.passwordEntry = Entry(self)
+        self.userEntry.grid(row=1, column=1)
+        self.passwordEntry.grid(row=2, column=1)
         
-        register = Button(self, text="Register new user", command=lambda: master.switchFrame(WelcomeScreen))
+        register = Button(self, text="Register new user", command=lambda: self.register(master))
         register.grid(row=3, columnspan=2)
+
+    def register(self, master):
+        ################## Add User/pass here ###################
+        registerUSERNAME = self.userEntry.get()
+        registerPASSWORD = self.passwordEntry.get()
+
+
+        master.switchFrame(WelcomeScreen)
+
+
 class HomePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
@@ -136,8 +155,7 @@ class AOO_Mode(Frame):
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
 
-        #VALUES -> replace '0' with stored values (from the file)
-
+        #VALUES -> replace '0's with stored values (in the file)
         self.value1= Label(self, text='0') #LRL
         self.value1.place(relx=0.8, rely=0.5)
         self.value2= Label(self, text='0')#URL
@@ -160,10 +178,9 @@ class AOO_Mode(Frame):
 
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
+        #When saved, store the entry values in text file.
 
-        #STORE NEW ENTRY VALUES IN TEXT FILE (replace old values)
-
-        #If statements are for when the entry is EMPTY, in which case it is assumed to be 0.
+        #If the entry is EMPTY, then it is assumed 0.
         if e1 != '':
             self.value1.config(text=e1)
         else:
@@ -262,7 +279,6 @@ class VOO_Mode(Frame):
 
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
-        #Labels = last saved entry values (if first time, then all = 0)
         #When saved, store the entry values in text file.
         
         #If the entry is EMPTY, then it is assumed 0.
@@ -363,7 +379,6 @@ class AAI_Mode(Frame):
 
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
-        #Labels = last saved entry values (if first time, then all = 0)
         #When saved, store the entry values in text file.
         
         #If the entry is EMPTY, then it is assumed 0.
@@ -467,7 +482,6 @@ class VVI_Mode(Frame):
 
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
-        #Labels = last saved entry values (if first time, then all = 0)
         #When saved, store the entry values in text file.
         
         #If the entry is EMPTY, then it is assumed 0.
@@ -499,4 +513,5 @@ class VVI_Mode(Frame):
 
 
 dcm = DCM()
+
 dcm.mainloop()
