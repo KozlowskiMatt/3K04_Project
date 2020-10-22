@@ -133,7 +133,7 @@ class HomePage(Frame):
         welcome.place(relx=0.5, rely=0.1, anchor='center')
 
         welcome_message = Label(self, font=("Helvetica", 14),
-                                text="Please select a mode from the dropdown menu below to set its programmable parameters.")
+                                text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
         welcome_message.place(relx=0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
@@ -151,7 +151,7 @@ class AOO_Mode(Frame):
         welcome.place(relx=0.5, rely=0.1, anchor='center')
 
         welcome_message = Label(self, font=("Helvetica", 14),
-                                text="Please select a mode from the dropdown menu below to set its programmable parameters.")
+                                text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
         welcome_message.place(relx=0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
@@ -168,27 +168,27 @@ class AOO_Mode(Frame):
         values.place(relx=0.8, rely=0.4)
 
         # PARAMETERS AND ENTRIES FOR THEM
-        LRL = Label(self, text="Lower Rate Limit")
+        LRL = Label(self, text="Lower Rate Limit (ppm)")
         LRL.place(relx=0.2, rely=0.5)
         entry1 = Entry(self)
         entry1.place(relx=0.5, rely=0.5)
 
-        URL = Label(self, text="Upper Rate Limit")
+        URL = Label(self, text="Upper Rate Limit (ppm)")
         URL.place(relx=0.2, rely=0.56)
         entry2 = Entry(self)
         entry2.place(relx=0.5, rely=0.56)
 
-        Atr_amp = Label(self, text="Atrial Amplitude")
+        Atr_amp = Label(self, text="Atrial Amplitude (V)")
         Atr_amp.place(relx=0.2, rely=0.62)
         entry3 = Entry(self)
         entry3.place(relx=0.5, rely=0.62)
 
-        Atr_PW = Label(self, text="Atrial Pulse Width")
+        Atr_PW = Label(self, text="Atrial Pulse Width (ms)")
         Atr_PW.place(relx=0.2, rely=0.68)
         entry4 = Entry(self)
         entry4.place(relx=0.5, rely=0.68)
 
-        ARP = Label(self, text="Atrial Refractory Period")
+        ARP = Label(self, text="Atrial Refractory Period (ms)")
         ARP.place(relx=0.2, rely=0.74)
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
@@ -212,8 +212,11 @@ class AOO_Mode(Frame):
         storeButton.place(relx=0.8, rely=0.8)
 
         # button to connect
-        connectButton = Button(self, text="Connect")
+        connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.8)
+
+        self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
+        self.connected_message.place(relx=0.1, rely=0.9)
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
         # When saved the values get updated in the sql database
@@ -249,6 +252,9 @@ class AOO_Mode(Frame):
         else:
             self.value5.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Refractory_Period'))
 
+    def connect(self, master):
+    	self.connected_message.config(text= "Connected to pacemaker device.")
+
 
 class VOO_Mode(Frame):
     def __init__(self, master):
@@ -259,7 +265,7 @@ class VOO_Mode(Frame):
         welcome.place(relx=0.5, rely=0.1, anchor='center')
 
         welcome_message = Label(self, font=("Helvetica", 14),
-                                text="Please select a mode from the dropdown menu below to set its programmable parameters.")
+                                text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
         welcome_message.place(relx=0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
@@ -276,27 +282,27 @@ class VOO_Mode(Frame):
         values.place(relx=0.8, rely=0.4)
 
         # PARAMETERS AND ENTRIES FOR THEM
-        LRL = Label(self, text="Lower Rate Limit")
+        LRL = Label(self, text="Lower Rate Limit (ppm)")
         LRL.place(relx=0.2, rely=0.5)
         entry1 = Entry(self)
         entry1.place(relx=0.5, rely=0.5)
 
-        URL = Label(self, text="Upper Rate Limit")
+        URL = Label(self, text="Upper Rate Limit (ppm)")
         URL.place(relx=0.2, rely=0.56)
         entry2 = Entry(self)
         entry2.place(relx=0.5, rely=0.56)
 
-        Vent_amp = Label(self, text="Ventricular Amplitude")
+        Vent_amp = Label(self, text="Ventricular Amplitude (V)")
         Vent_amp.place(relx=0.2, rely=0.62)
         entry3 = Entry(self)
         entry3.place(relx=0.5, rely=0.62)
 
-        Vent_PW = Label(self, text="Ventricular Pulse Width")
+        Vent_PW = Label(self, text="Ventricular Pulse Width (ms)")
         Vent_PW.place(relx=0.2, rely=0.68)
         entry4 = Entry(self)
         entry4.place(relx=0.5, rely=0.68)
 
-        VRP = Label(self, text="Ventricular Refractory Period")
+        VRP = Label(self, text="Ventricular Refractory Period (ms)")
         VRP.place(relx=0.2, rely=0.74)
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
@@ -319,8 +325,11 @@ class VOO_Mode(Frame):
                                                               entry4.get(), entry5.get()))
         storeButton.place(relx=0.8, rely=0.8)
         # button to connect
-        connectButton = Button(self, text="Connect")
+        connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.8)
+
+        self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
+        self.connected_message.place(relx=0.1, rely=0.9)
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
         # When saved, store the entry values in text file.
@@ -356,6 +365,9 @@ class VOO_Mode(Frame):
         else:
             self.value5.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))
 
+    def connect(self, master):
+    	self.connected_message.config(text= "Connected to pacemaker device.")
+
 
 class AAI_Mode(Frame):
     def __init__(self, master):
@@ -366,7 +378,7 @@ class AAI_Mode(Frame):
         welcome.place(relx=0.5, rely=0.1, anchor='center')
 
         welcome_message = Label(self, font=("Helvetica", 14),
-                                text="Please select a mode from the dropdown menu below to set its programmable parameters.")
+                                text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
         welcome_message.place(relx=0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
@@ -383,27 +395,27 @@ class AAI_Mode(Frame):
         values.place(relx=0.8, rely=0.4)
 
         # PARAMETERS AND ENTRIES FOR THEM
-        LRL = Label(self, text="Lower Rate Limit")
+        LRL = Label(self, text="Lower Rate Limit (ppm)")
         LRL.place(relx=0.2, rely=0.5)
         entry1 = Entry(self)
         entry1.place(relx=0.5, rely=0.5)
 
-        URL = Label(self, text="Upper Rate Limit")
+        URL = Label(self, text="Upper Rate Limit (ppm)")
         URL.place(relx=0.2, rely=0.56)
         entry2 = Entry(self)
         entry2.place(relx=0.5, rely=0.56)
 
-        Atr_amp = Label(self, text="Atrial Amplitude")
+        Atr_amp = Label(self, text="Atrial Amplitude (V)")
         Atr_amp.place(relx=0.2, rely=0.62)
         entry3 = Entry(self)
         entry3.place(relx=0.5, rely=0.62)
 
-        Atr_PW = Label(self, text="Atrial Pulse Width")
+        Atr_PW = Label(self, text="Atrial Pulse Width (ms)")
         Atr_PW.place(relx=0.2, rely=0.68)
         entry4 = Entry(self)
         entry4.place(relx=0.5, rely=0.68)
 
-        ARP = Label(self, text="Atrial Refractory Period")
+        ARP = Label(self, text="Atrial Refractory Period (ms)")
         ARP.place(relx=0.2, rely=0.74)
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
@@ -426,8 +438,11 @@ class AAI_Mode(Frame):
                                                               entry4.get(), entry5.get(),))
         storeButton.place(relx=0.8, rely=0.8)
         # button to connect
-        connectButton = Button(self, text="Connect")
+        connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.8)
+
+        self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
+        self.connected_message.place(relx=0.1, rely=0.9)
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
         # When saved, store the entry values in text file.
@@ -463,6 +478,9 @@ class AAI_Mode(Frame):
         else:
             self.value5.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Refractory_Period'))
 
+    def connect(self, master):
+    	self.connected_message.config(text= "Connected to pacemaker device.")
+
 
 class VVI_Mode(Frame):
     def __init__(self, master):
@@ -473,7 +491,7 @@ class VVI_Mode(Frame):
         welcome.place(relx=0.5, rely=0.1, anchor='center')
 
         welcome_message = Label(self, font=("Helvetica", 14),
-                                text="Please select a mode from the dropdown menu below to set its programmable parameters.")
+                                text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
         welcome_message.place(relx=0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
@@ -492,27 +510,27 @@ class VVI_Mode(Frame):
         values.place(relx=0.8, rely=0.4)
 
         # PARAMETERS AND ENTRIES FOR THEM
-        LRL = Label(self, text="Lower Rate Limit")
+        LRL = Label(self, text="Lower Rate Limit (ppm)")
         LRL.place(relx=0.2, rely=0.5)
         entry1 = Entry(self)
         entry1.place(relx=0.5, rely=0.5)
 
-        URL = Label(self, text="Upper Rate Limit")
+        URL = Label(self, text="Upper Rate Limit (ppm)")
         URL.place(relx=0.2, rely=0.56)
         entry2 = Entry(self)
         entry2.place(relx=0.5, rely=0.56)
 
-        Vent_amp = Label(self, text="Ventricular Amplitude")
+        Vent_amp = Label(self, text="Ventricular Amplitude (V)")
         Vent_amp.place(relx=0.2, rely=0.62)
         entry3 = Entry(self)
         entry3.place(relx=0.5, rely=0.62)
 
-        Vent_PW = Label(self, text="Ventricular Pulse Width")
+        Vent_PW = Label(self, text="Ventricular Pulse Width (ms)")
         Vent_PW.place(relx=0.2, rely=0.68)
         entry4 = Entry(self)
         entry4.place(relx=0.5, rely=0.68)
 
-        VRP = Label(self, text="Ventricular Refractory Period")
+        VRP = Label(self, text="Ventricular Refractory Period (ms)")
         VRP.place(relx=0.2, rely=0.74)
         entry5 = Entry(self)
         entry5.place(relx=0.5, rely=0.74)
@@ -535,12 +553,14 @@ class VVI_Mode(Frame):
                                                               entry4.get(), entry5.get()))
         storeButton.place(relx=0.8, rely=0.8)
         # button to connect
-        connectButton = Button(self, text="Connect")
+        connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.8)
+
+        self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
+        self.connected_message.place(relx=0.1, rely=0.9)
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
         # When saved, store the entry values in text file.
-
         # If the entry is EMPTY, then it is assumed 0.
         if e1 != '':
             self.value1.config(text=e1)
@@ -571,6 +591,9 @@ class VVI_Mode(Frame):
             Back.Change_Ventrical_Refractory_Period(loginUSERNAME,float(e5))
         else:
             self.value5.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))
+
+    def connect(self, master):
+    	self.connected_message.config(text= "Connected to pacemaker device.")
 
 dcm = DCM()
 
