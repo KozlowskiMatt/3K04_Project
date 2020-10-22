@@ -1,0 +1,41 @@
+THINGS TO FIX:
+
+(seems to be Done) 1. Input for parameter cannot be a char or string, has to be a number
+	--> Could do this by using the ASCII Characters
+	--> int(input)
+
+(Done) 2. Fix the problem with LRL and why when no input is give it changes to the next parameter value
+	--> Have no idea why this is happening
+
+(Done) 3. Ability to make new user when the database if empty ***
+	--> Currently the code requires there to be at least one user in the database
+
+(Done) 4. infinite loop when registering new user with invalid inputs
+
+
+
+
+
+
+THINGS TO INCLUDE:
+
+(Done) 1. Have ERROR message displayed when you try to create a new user when the database is full -> in WelcomeScreen 
+
+(Done) 2. Have ERROR message displayed when you try to login with user/pass that does not match in the -> in WelcomeScreen 
+database
+
+(Done) 3. Have ERROR message when false register username/password entry -> in NewUser 
+
+(Done) 4. Store parameter values as floats
+
+5. Have SUCCESS message when register works 
+	--> message will be in WelcomeScreen AFTER transitioning to it from the register function in NewUser
+	--> could not get this to work, but this is also not necessary
+
+6. "The user interface shall be capable of visually indicating when the DCM
+and the device are communicating." 
+	--> requirement 4 in 3.2.2 DCM User Interface in PACEMAKER.pdf
+
+7."The user interface shall be capable of visually indicating when a different
+PACEMAKER device is approached than was previously interrogated." 
+	--> requirement 7 in 3.2.2 DCM User Interface in PACEMAKER.pdf
