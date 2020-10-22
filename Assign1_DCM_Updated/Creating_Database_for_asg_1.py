@@ -1,8 +1,8 @@
 import mysql.connector
 
 
-mysql_user = "root" #Insert mysql password name here
-mysql_passwd = "root" #Insert mysql password name here 
+mysql_user = "" #Insert mysql password name here
+mysql_passwd = "" #Insert mysql password name here 
 
 
 ### Steps to create new database and table when first running the code###
@@ -12,6 +12,7 @@ mysql_passwd = "root" #Insert mysql password name here
 
 
 '''
+
 db = mysql.connector.connect(
     host="localhost",
     user= mysql_user,
@@ -30,21 +31,21 @@ mycursor.execute("CREATE DATABASE application")
 
 #Step 2: Uncomment '''s here, and KEEP THEM UNCOMMENTED for future mycursor commands.
 
-
+'''
 db = mysql.connector.connect(
     host="localhost",
     user= mysql_user,
     passwd= mysql_passwd,
-    database = 'application'
+    database = 'application' #database name here
 
 )
 mycursor = db.cursor(buffered=True)
+'''
 
 
 
 
-
-#Step 3: Uncomment '''s here and run to create a table. Keep the name as 'Prac'. Then COMMENT IT AGAIN after running.
+#Step 3: Uncomment '''s here and run to create a table. Keep the name as 'Prac'. Then COMMENT IT AGAIN after running to avoid the already exists error.
 '''
 mycursor.execute("CREATE TABLE Prac(username VARCHAR(25), password VARCHAR(25),Lower_Rate_Limit float, Upper_Rate_Limit float, \
 Ventrical_Amplitude float, Ventrical_Pulse_Width float, Ventrical_Refractory_Period float, Attrial_Amplitude float, Attrial_Pulse_Width float,\
