@@ -128,7 +128,7 @@ def Change_Attrial_Refractory_Period(name,ARP):
 ##########################################################################################################
 
 
-##### To get any parameter value given username and parameter, will be used to display current stored values
+#### To get any parameter value given username and parameter, will be used to display current stored values
 def Get_Param(name,param):
     query = "SELECT username,%s FROM Prac WHERE username = '%s'"%(param,name)
     mycursor.execute(query)
