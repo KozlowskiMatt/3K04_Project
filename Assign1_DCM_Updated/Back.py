@@ -21,6 +21,17 @@ Description: This function will create a new user if there is enough space in th
              and if input username and password  dont already exist
 '''
 
+
+def StoreUser(name):
+    mycursor.execute("REPLACE INTO PrevUser (username, personID) VALUES (%s, %s)", (name, '1'))
+    db.commit()
+
+def getPrevUser():
+    mycursor.execute("SELECT username FROM PrevUser WHERE personID = '1'")
+    for i in mycursor:
+        return (i[0])
+
+
 def New(name,passwrd):
 
     mycursor.execute("SELECT COUNT(*) FROM Prac") #count num of rows in one column
@@ -128,7 +139,7 @@ def Change_Attrial_Refractory_Period(name,ARP):
 ##########################################################################################################
 
 
-#### To get any parameter value given username and parameter, will be used to display current stored values
+##### To get any parameter value given username and parameter, will be used to display current stored values
 def Get_Param(name,param):
     query = "SELECT username,%s FROM Prac WHERE username = '%s'"%(param,name)
     mycursor.execute(query)

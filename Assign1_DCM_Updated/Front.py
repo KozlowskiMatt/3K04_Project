@@ -59,7 +59,7 @@ class WelcomeScreen(Frame):
     def createUser(self,master):
         #check if max users reached 10
         if Back.CheckUsers():
-            master.switchFrame(NewUser)
+            master.switchFrame(NewUser) 
 
         else:
             #ERROR MAX USER CAPACITY REACHED
@@ -134,10 +134,18 @@ class HomePage(Frame):
 
         welcome_message = Label(self, font=("Helvetica", 14),
                                 text="Please select a mode from the dropdown menu below to set its programmable parameters. \nDo not include units in the entries.")
-        welcome_message.place(relx=0.5, rely=0.2, anchor='center')
+        welcome_message.place(relx= 0.5, rely=0.2, anchor='center')
 
         dropDown = ttk.Combobox(self, values=["AOO", "VOO", "AAI", "VVI"], state="readonly")
         dropDown.place(relx=0.5, rely=0.3, anchor='center')
+
+        if (loginUSERNAME != Back.getPrevUser()): #replace ok with previous username stored
+            self.newDevice = Label(self, text="Different user detected.", fg='green', font=("Helvetica", 14))
+            self.newDevice.place(relx=0.1, rely=0.9)
+            Back.StoreUser(loginUSERNAME)
+        else:
+            #store username
+            Back.StoreUser(loginUSERNAME)
 
         dropDown.bind("<<ComboboxSelected>>", lambda _: master.callback(dropDown.get()))
 
@@ -443,6 +451,7 @@ class AAI_Mode(Frame):
 
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.9)
+
 
     def storeValues(self, master, e1, e2, e3, e4, e5):
         # When saved, store the entry values in text file.
