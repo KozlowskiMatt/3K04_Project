@@ -1142,8 +1142,6 @@ class AAIR_Mode(Frame):
 
         dropDown.bind("<<ComboboxSelected>>", lambda _: master.callback(dropDown.get()))
 
-        parameters = Label(self, text='Parameters')
-
         # LABELS
         parameters = Label(self, text='Parameters:', font='Helvetica 12 bold')
         parameters.place(relx=0.2, rely=0.4)
@@ -1158,41 +1156,78 @@ class AAIR_Mode(Frame):
         entry1.place(relx=0.5, rely=0.5)
 
         URL = Label(self, text="Upper Rate Limit (ppm)")
-        URL.place(relx=0.2, rely=0.56)
+        URL.place(relx=0.2, rely=0.54)
         entry2 = Entry(self)
-        entry2.place(relx=0.5, rely=0.56)
+        entry2.place(relx=0.5, rely=0.54)
 
-        Vent_amp = Label(self, text="Ventricular Amplitude (V)")
-        Vent_amp.place(relx=0.2, rely=0.62)
+        Atr_amp = Label(self, text="Atrial Amplitude (V)")
+        Atr_amp.place(relx=0.2, rely=0.58)
         entry3 = Entry(self)
-        entry3.place(relx=0.5, rely=0.62)
+        entry3.place(relx=0.5, rely=0.58)
 
-        Vent_PW = Label(self, text="Ventricular Pulse Width (ms)")
-        Vent_PW.place(relx=0.2, rely=0.68)
+        Atr_PW = Label(self, text="Atrial Pulse Width (ms)")
+        Atr_PW.place(relx=0.2, rely=0.62)
         entry4 = Entry(self)
-        entry4.place(relx=0.5, rely=0.68)
+        entry4.place(relx=0.5, rely=0.62)
 
-        VRP = Label(self, text="Ventricular Refractory Period (ms)")
-        VRP.place(relx=0.2, rely=0.74)
+        MSR = Label(self, text="Maximum Sensor Rate (ppm)")
+        MSR.place(relx=0.2, rely=0.66)
         entry5 = Entry(self)
-        entry5.place(relx=0.5, rely=0.74)
+        entry5.place(relx=0.5, rely=0.66)
+
+        A_Thresh = Label(self, text="Activity Threshold")
+        A_Thresh.place(relx=0.2, rely=0.70)
+        entry6 = Entry(self)
+        entry6.place(relx=0.5, rely=0.70)
+
+        React_T = Label(self, text="Reaction Time (sec)")
+        React_T.place(relx=0.2, rely=0.74)
+        entry7 = Entry(self)
+        entry7.place(relx=0.5, rely=0.74)
+
+        Resp_Fact = Label(self, text="Response Factor")
+        Resp_Fact.place(relx=0.2, rely=0.78)
+        entry8 = Entry(self)
+        entry8.place(relx=0.5, rely=0.78)
+
+        Recov_T = Label(self, text="Recovery Time (min)")
+        Recov_T.place(relx=0.2, rely=0.82)
+        entry9 = Entry(self)
+        entry9.place(relx=0.5, rely=0.82)
+
+        ARP = Label(self, text="Atrial Refractory Period (ms)")
+        ARP.place(relx=0.2, rely=0.86)
+        entry10 = Entry(self)
+        entry10.place(relx=0.5, rely=0.86)
+
 
         # VALUES -> replace '0's with stored values (in the file)
         self.value1 = Label(self, text= Back.Get_Param(loginUSERNAME,'Lower_Rate_Limit'))  # LRL
         self.value1.place(relx=0.8, rely=0.5)
         self.value2 = Label(self, text= Back.Get_Param(loginUSERNAME,'Upper_Rate_Limit'))  # URL
-        self.value2.place(relx=0.8, rely=0.56)
-        self.value3 = Label(self, text = Back.Get_Param(loginUSERNAME,'Ventrical_Amplitude'))  # VENT AMP
-        self.value3.place(relx=0.8, rely=0.62)
-        self.value4 = Label(self, text= Back.Get_Param(loginUSERNAME,'Ventrical_Pulse_Width'))  # VENT PW
-        self.value4.place(relx=0.8, rely=0.68)
-        self.value5 = Label(self, text= Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))  # VRP
-        self.value5.place(relx=0.8, rely=0.74)
+        self.value2.place(relx=0.8, rely=0.54)
+        self.value3 = Label(self, text= Back.Get_Param(loginUSERNAME,'Attrial_Amplitude' ))  # ATR AMP
+        self.value3.place(relx=0.8, rely=0.58)
+        self.value4 = Label(self, text= Back.Get_Param(loginUSERNAME,'Attrial_Pulse_Width'))  # ATR PW
+        self.value4.place(relx=0.8, rely=0.62)
+        self.value5 = Label(self, text= Back.Get_Param(loginUSERNAME,'Maximum_Sensor_Rate'))
+        self.value5.place(relx=0.8, rely=0.66)
+        self.value6 = Label(self, text= Back.Get_Param(loginUSERNAME,'Activity_Threshold'))  
+        self.value6.place(relx=0.8, rely=0.70)
+        self.value7 = Label(self, text= Back.Get_Param(loginUSERNAME,'Reaction_Time'))  
+        self.value7.place(relx=0.8, rely=0.74)
+        self.value8 = Label(self, text= Back.Get_Param(loginUSERNAME,'Response_Factor'))  
+        self.value8.place(relx=0.8, rely=0.78)
+        self.value9 = Label(self, text= Back.Get_Param(loginUSERNAME,'Recovery_Time'))  
+        self.value9.place(relx=0.8, rely=0.82)
+        self.value10 = Label(self, text= Back.Get_Param(loginUSERNAME,'Attrial_Refractory_Period'))  # ARP
+        self.value10.place(relx=0.8, rely=0.86)
 
         # button to store values
         storeButton = Button(self, text="Store",
                              command=lambda: self.storeValues(master, entry1.get(), entry2.get(), entry3.get(),
-                                                              entry4.get(), entry5.get()))
+                                                              entry4.get(), entry5.get(),entry6.get(),entry7.get(),
+                                                              entry8.get(),entry9.get(),entry10.get()))
         storeButton.place(relx=0.8, rely=0.9)
         # button to connect
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
@@ -1201,8 +1236,10 @@ class AAIR_Mode(Frame):
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
-    def storeValues(self, master, e1, e2, e3, e4, e5):
+
+    def storeValues(self, master, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10):
         # When saved, store the entry values in text file.
+
         # If the entry is EMPTY, then it is assumed 0.
         if e1 != '':
             self.value1.config(text=e1)
@@ -1218,21 +1255,51 @@ class AAIR_Mode(Frame):
 
         if e3 != '':
             self.value3.config(text=e3)
-            Back.Change_Ventrical_Amplitude(loginUSERNAME,float(e3))
+            Back.Change_Attrial_Amplitude(loginUSERNAME,float(e3))
         else:
-            self.value3.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Amplitude'))
+            self.value3.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Amplitude'))
 
         if e4 != '':
             self.value4.config(text=e4)
-            Back.Change_Ventrical_Pulse_Width(loginUSERNAME,float(e4))
+            Back.Change_Attrial_Pulse_Width(loginUSERNAME,float(e4))
         else:
-            self.value4.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Pulse_Width'))
+            self.value4.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Pulse_Width'))
 
         if e5 != '':
             self.value5.config(text=e5)
-            Back.Change_Ventrical_Refractory_Period(loginUSERNAME,float(e5))
+            Back.Change_Maximum_Sensor_Rate(loginUSERNAME,float(e5))
         else:
-            self.value5.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))
+            self.value5.config(text = Back.Get_Param(loginUSERNAME,'Maximum_Sensor_Rate'))
+
+        if e6 != '':
+            self.value6.config(text=e6)
+            Back.Change_Activity_Threshold(loginUSERNAME,float(e6))
+        else:
+            self.value6.config(text = Back.Get_Param(loginUSERNAME,'Activity_Threshold'))
+
+        if e7 != '':
+            self.value7.config(text=e7)
+            Back.Change_Reaction_Time(loginUSERNAME,float(e7))
+        else:
+            self.value7.config(text = Back.Get_Param(loginUSERNAME,'Reaction_Time'))
+
+        if e8 != '':
+            self.value8.config(text=e8)
+            Back.Change_Response_Factor(loginUSERNAME,float(e8))
+        else:
+            self.value8.config(text = Back.Get_Param(loginUSERNAME,'Response_Factor'))
+
+        if e9 != '':
+            self.value9.config(text=e9)
+            Back.Change_Recovery_Time(loginUSERNAME,float(e9))
+        else:
+            self.value9.config(text = Back.Get_Param(loginUSERNAME,'Recovery_Time'))
+
+        if e10 != '':
+            self.value10.config(text=e10)
+            Back.Change_Attrial_Refractory_Period(loginUSERNAME,float(e10))
+        else:
+            self.value10.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Refractory_Period'))
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
@@ -1275,41 +1342,77 @@ class VVIR_Mode(Frame):
         entry1.place(relx=0.5, rely=0.5)
 
         URL = Label(self, text="Upper Rate Limit (ppm)")
-        URL.place(relx=0.2, rely=0.56)
+        URL.place(relx=0.2, rely=0.54)
         entry2 = Entry(self)
-        entry2.place(relx=0.5, rely=0.56)
+        entry2.place(relx=0.5, rely=0.54)
 
         Vent_amp = Label(self, text="Ventricular Amplitude (V)")
-        Vent_amp.place(relx=0.2, rely=0.62)
+        Vent_amp.place(relx=0.2, rely=0.58)
         entry3 = Entry(self)
-        entry3.place(relx=0.5, rely=0.62)
+        entry3.place(relx=0.5, rely=0.58)
 
         Vent_PW = Label(self, text="Ventricular Pulse Width (ms)")
-        Vent_PW.place(relx=0.2, rely=0.68)
+        Vent_PW.place(relx=0.2, rely=0.62)
         entry4 = Entry(self)
-        entry4.place(relx=0.5, rely=0.68)
+        entry4.place(relx=0.5, rely=0.62)
+
+        MSR = Label(self, text="Maximum Sensor Rate (ppm)")
+        MSR.place(relx=0.2, rely=0.66)
+        entry5 = Entry(self)
+        entry5.place(relx=0.5, rely=0.66)
+
+        A_Thresh = Label(self, text="Activity Threshold")
+        A_Thresh.place(relx=0.2, rely=0.70)
+        entry6 = Entry(self)
+        entry6.place(relx=0.5, rely=0.70)
+
+        React_T = Label(self, text="Reaction Time (sec)")
+        React_T.place(relx=0.2, rely=0.74)
+        entry7 = Entry(self)
+        entry7.place(relx=0.5, rely=0.74)
+
+        Resp_Fact = Label(self, text="Response Factor")
+        Resp_Fact.place(relx=0.2, rely=0.78)
+        entry8 = Entry(self)
+        entry8.place(relx=0.5, rely=0.78)
+
+        Recov_T = Label(self, text="Recovery Time (min)")
+        Recov_T.place(relx=0.2, rely=0.82)
+        entry9 = Entry(self)
+        entry9.place(relx=0.5, rely=0.82)
 
         VRP = Label(self, text="Ventricular Refractory Period (ms)")
-        VRP.place(relx=0.2, rely=0.74)
-        entry5 = Entry(self)
-        entry5.place(relx=0.5, rely=0.74)
+        VRP.place(relx=0.2, rely=0.86)
+        entry10 = Entry(self)
+        entry10.place(relx=0.5, rely=0.86)
 
         # VALUES -> replace '0's with stored values (in the file)
         self.value1 = Label(self, text= Back.Get_Param(loginUSERNAME,'Lower_Rate_Limit'))  # LRL
         self.value1.place(relx=0.8, rely=0.5)
         self.value2 = Label(self, text= Back.Get_Param(loginUSERNAME,'Upper_Rate_Limit'))  # URL
-        self.value2.place(relx=0.8, rely=0.56)
+        self.value2.place(relx=0.8, rely=0.54)
         self.value3 = Label(self, text = Back.Get_Param(loginUSERNAME,'Ventrical_Amplitude'))  # VENT AMP
-        self.value3.place(relx=0.8, rely=0.62)
+        self.value3.place(relx=0.8, rely=0.58)
         self.value4 = Label(self, text= Back.Get_Param(loginUSERNAME,'Ventrical_Pulse_Width'))  # VENT PW
-        self.value4.place(relx=0.8, rely=0.68)
-        self.value5 = Label(self, text= Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))  # VRP
-        self.value5.place(relx=0.8, rely=0.74)
+        self.value4.place(relx=0.8, rely=0.62)
+        self.value5 = Label(self, text= Back.Get_Param(loginUSERNAME,'Maximum_Sensor_Rate'))
+        self.value5.place(relx=0.8, rely=0.66)
+        self.value6 = Label(self, text= Back.Get_Param(loginUSERNAME,'Activity_Threshold'))  
+        self.value6.place(relx=0.8, rely=0.70)
+        self.value7 = Label(self, text= Back.Get_Param(loginUSERNAME,'Reaction_Time'))  
+        self.value7.place(relx=0.8, rely=0.74)
+        self.value8 = Label(self, text= Back.Get_Param(loginUSERNAME,'Response_Factor'))  
+        self.value8.place(relx=0.8, rely=0.78)
+        self.value9 = Label(self, text= Back.Get_Param(loginUSERNAME,'Recovery_Time'))  
+        self.value9.place(relx=0.8, rely=0.82)
+        self.value10 = Label(self, text= Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))  # VRP
+        self.value10.place(relx=0.8, rely=0.86)
 
         # button to store values
         storeButton = Button(self, text="Store",
                              command=lambda: self.storeValues(master, entry1.get(), entry2.get(), entry3.get(),
-                                                              entry4.get(), entry5.get()))
+                                                              entry4.get(), entry5.get(), entry6.get(), entry7.get(),
+                                                              entry8.get(), entry9.get(), entry10.get()))
         storeButton.place(relx=0.8, rely=0.9)
         # button to connect
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
@@ -1318,7 +1421,7 @@ class VVIR_Mode(Frame):
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
-    def storeValues(self, master, e1, e2, e3, e4, e5):
+    def storeValues(self, master, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10):
         # When saved, store the entry values in text file.
         # If the entry is EMPTY, then it is assumed 0.
         if e1 != '':
@@ -1347,9 +1450,39 @@ class VVIR_Mode(Frame):
 
         if e5 != '':
             self.value5.config(text=e5)
-            Back.Change_Ventrical_Refractory_Period(loginUSERNAME,float(e5))
+            Back.Change_Maximum_Sensor_Rate(loginUSERNAME,float(e5))
         else:
-            self.value5.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))
+            self.value5.config(text = Back.Get_Param(loginUSERNAME,'Maximum_Sensor_Rate'))
+
+        if e6 != '':
+            self.value6.config(text=e6)
+            Back.Change_Activity_Threshold(loginUSERNAME,float(e6))
+        else:
+            self.value6.config(text = Back.Get_Param(loginUSERNAME,'Activity_Threshold'))
+
+        if e7 != '':
+            self.value7.config(text=e7)
+            Back.Change_Reaction_Time(loginUSERNAME,float(e7))
+        else:
+            self.value7.config(text = Back.Get_Param(loginUSERNAME,'Reaction_Time'))
+
+        if e8 != '':
+            self.value8.config(text=e8)
+            Back.Change_Response_Factor(loginUSERNAME,float(e8))
+        else:
+            self.value8.config(text = Back.Get_Param(loginUSERNAME,'Response_Factor'))
+
+        if e9 != '':
+            self.value9.config(text=e9)
+            Back.Change_Recovery_Time(loginUSERNAME,float(e9))
+        else:
+            self.value9.config(text = Back.Get_Param(loginUSERNAME,'Recovery_Time'))
+
+        if e10 != '':
+            self.value10.config(text=e10)
+            Back.Change_Ventrical_Refractory_Period(loginUSERNAME,float(e10))
+        else:
+            self.value10.config(text = Back.Get_Param(loginUSERNAME,'Ventrical_Refractory_Period'))
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
