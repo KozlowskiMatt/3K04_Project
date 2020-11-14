@@ -1,13 +1,13 @@
 import mysql.connector
 
-mysql_user = " " #Insert mysql password name here
-mysql_passwd = " " #Insert mysql password name here 
+mysql_user = "root" #Insert mysql password name here
+mysql_passwd = "root" #Insert mysql password name here 
 
 db = mysql.connector.connect(
     host="localhost",
     user= mysql_user,
     passwd= mysql_passwd,
-    database = 'Prac'
+    database = 'application' #this database should be the same as the ap
 )
 mycursor = db.cursor(buffered=True)
 
@@ -21,35 +21,73 @@ Description: This function will create a new user if there is enough space in th
              and if input username and password  dont already exist
 '''
 
-def New(name,passwrd):
-    mycursor.execute("SELECT *FROM Prac ORDER BY personID DESC LIMIT 1 ")
-    CREATING = True
+
+def StoreUser(name):
+    mycursor.execute("REPLACE INTO PrevUser (username, personID) VALUES (%s, %s)", (name, '1'))
+    db.commit()
+
+def getPrevUser():
+    mycursor.execute("SELECT username FROM PrevUser WHERE personID = '1'")
     for i in mycursor:
-        while (CREATING):
-            mycursor.execute("SELECT username,password FROM Prac")
-            user = True
-            for info in mycursor:
-                if name == info[0] or passwrd == info[-1]:
-                    user = False
-                    print("Sorry Username or Password is not available try again!")
-                    break
-            if (user == True):
-                CREATING = False
-        mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0,))
-        db.commit()
-        print("It is made!")
-        return True
-    return False
+        return (i[0])
+
+
+def New(name,passwrd):
+
+    mycursor.execute("SELECT COUNT(*) FROM Prac") #count num of rows in one column
+    result = mycursor.fetchone() #will be a tuple with the value (NumOfRows, _______) -> (no second value). so result[0] is the number of rows
+
+    if result[0] == 0: #if no users exist
+        if passwrd == "" or name == "": #empty entry(s)
+            #print("Empty entry")
+            return "empty"
+        else:
+            mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period, Maximum_Sensor_Rate, Activity_Threshold, Reaction_Time, Response_Factor, Recovery_Time, Fixed_AV_Delay) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,))
+            db.commit()
+            return True
+    else:
+        if passwrd == "" or name == "": #empty entry(s)
+            #print("Empty entry")
+            return "empty"
+        else:
+            mycursor.execute("SELECT *FROM Prac ORDER BY personID DESC LIMIT 1 ")
+            #CREATING = True
+            for i in mycursor:
+                #while (CREATING):
+                mycursor.execute("SELECT username,password FROM Prac")
+                # user = True
+                for info in mycursor:
+                    if name == info[0] or passwrd == info[-1]:
+                        user = False
+                        #print("Sorry Username or Password is not available try again!")
+                        return False #since there is an error, no need to continue, so return false.
+                        #user = False
+                    # if (user == True):
+                    #   CREATING = False
+                mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period, Maximum_Sensor_Rate, Activity_Threshold, Reaction_Time, Response_Factor, Recovery_Time, Fixed_AV_Delay) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,))
+                db.commit()
+                #print("It is made!")
+                return True
+            return False
+
 
 '''
 Function CheckUsers() is used to see whether there is enough space in database to create a new user
 '''
 def CheckUsers():
-    mycursor.execute("SELECT *FROM Prac ORDER BY personID DESC LIMIT 1 ")
-    for i in mycursor:
-        if i[-1] > 10:
-            return True
-    return False
+    mycursor.execute("SELECT COUNT(*) FROM Prac") #count num of rows in one column
+    result = mycursor.fetchone() #will be a tuple with the value (NumOfRows, _______) -> (no second value). so result[0] is the number of rows
+
+    if result[0] == 0: #if no users exist
+        return True #registering should be allowed
+
+    else: #users do exist, so now registering should only be allowed if the max user capacity isn't reached
+        mycursor.execute("SELECT *FROM Prac ORDER BY personID DESC LIMIT 1 ")
+        for i in mycursor:
+            if i[-1] < 10:
+                return True
+        return False
+
 
 ''' 
 This will let the user login to their acount if username and password match with the database
@@ -61,7 +99,7 @@ def Login(name,passwrd):
             #print("Login Succesful")
             #return (name)
             return 1
-    print("Incorrect Login information")
+    #print("Incorrect Login information")
     return 0
 
 
@@ -98,16 +136,39 @@ def Change_Attrial_Pulse_Width(name,APW):
 def Change_Attrial_Refractory_Period(name,ARP):
     mycursor.execute("UPDATE Prac SET Attrial_Refractory_Period = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
+
+def Change_Maximum_Sensor_Rate(name,ARP):
+    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Activity_Threshold(name,ARP):
+    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Reaction_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Response_Factor(name,ARP):
+    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Recovery_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Fixed_AV_Delay(name,ARP):
+    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
 ##########################################################################################################
 
 
 ##### To get any parameter value given username and parameter, will be used to display current stored values
 def Get_Param(name,param):
     query = "SELECT username,%s FROM Prac WHERE username = '%s'"%(param,name)
-    print(query)
     mycursor.execute(query)
     for i in mycursor:
-        print(i[-1])
-    return (str(i[-1]))
+        return (str(i[-1]))
 
 
