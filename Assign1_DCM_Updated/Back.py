@@ -42,7 +42,7 @@ def New(name,passwrd):
             #print("Empty entry")
             return "empty"
         else:
-            mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0,))
+            mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period, Maximum_Sensor_Rate, Activity_Threshold, Reaction_Time, Response_Factor, Recovery_Time, Fixed_AV_Delay) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,))
             db.commit()
             return True
     else:
@@ -64,7 +64,7 @@ def New(name,passwrd):
                         #user = False
                     # if (user == True):
                     #   CREATING = False
-                mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0,))
+                mycursor.execute("INSERT INTO Prac (username,password,Lower_Rate_Limit,Upper_Rate_Limit,Ventrical_Amplitude,Ventrical_Pulse_Width,Ventrical_Refractory_Period,Attrial_Amplitude,Attrial_Pulse_Width,Attrial_Refractory_Period, Maximum_Sensor_Rate, Activity_Threshold, Reaction_Time, Response_Factor, Recovery_Time, Fixed_AV_Delay) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(name, passwrd, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,))
                 db.commit()
                 #print("It is made!")
                 return True
@@ -136,6 +136,31 @@ def Change_Attrial_Pulse_Width(name,APW):
 def Change_Attrial_Refractory_Period(name,ARP):
     mycursor.execute("UPDATE Prac SET Attrial_Refractory_Period = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
+
+def Change_Maximum_Sensor_Rate(name,ARP):
+    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Activity_Threshold(name,ARP):
+    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Reaction_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Response_Factor(name,ARP):
+    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Recovery_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
+def Change_Fixed_AV_Delay(name,ARP):
+    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(ARP,name))
+    db.commit()
+
 ##########################################################################################################
 
 

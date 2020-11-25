@@ -56,7 +56,8 @@ mycursor = db.cursor(buffered=True)
 '''
 mycursor.execute("CREATE TABLE Prac(username VARCHAR(25), password VARCHAR(25),Lower_Rate_Limit float, Upper_Rate_Limit float, \
 Ventrical_Amplitude float, Ventrical_Pulse_Width float, Ventrical_Refractory_Period float, Attrial_Amplitude float, Attrial_Pulse_Width float,\
-Attrial_Refractory_Period float, personID float PRIMARY KEY AUTO_INCREMENT)")
+Attrial_Refractory_Period float, Maximum_Sensor_Rate float, Activity_Threshold float, Reaction_Time float, Response_Factor float, \
+Recovery_Time float, Fixed_AV_Delay float, personID float PRIMARY KEY AUTO_INCREMENT)")
 
 mycursor.execute("CREATE TABLE PrevUser(username VARCHAR(25), personID float PRIMARY KEY AUTO_INCREMENT)")
 '''
@@ -76,6 +77,8 @@ mycursor.execute("CREATE TABLE PrevUser(username VARCHAR(25), personID float PRI
 #Uncomment the line below and run to DELETE THE SELECTED DATABASE, then make it a comment again
 #mycursor.execute("DROP DATABASE application")
 
+#Uncomment the line below and run to DELETE THE SELECTED TABLE, then make it a comment again
+#mycursor.execute("DROP TABLE Prac")
 
 #Uncomment the line below and run to CLEAR THE ENTRIES OF Prac TABLE, then make it a comment again.
 #mycursor.execute("TRUNCATE TABLE PrevUser")
