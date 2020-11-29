@@ -6,7 +6,7 @@ import mysql.connector
 
 #INSERT USER AND PASSWORD FOR MYSQL CONNECTION 
 
-mysql_user = "" #Insert mysql password name here
+mysql_user = "" #Insert mysql username name here
 mysql_passwd = "" #Insert mysql password name here 
 
 
