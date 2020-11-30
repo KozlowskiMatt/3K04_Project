@@ -1,6 +1,6 @@
 THINGS TO FIX:
 
-(seems to be Done) 1. Input for parameter cannot be a char or string, has to be a number
+(Done) 1. Input for parameter cannot be a char or string, has to be a number
 	--> Could do this by using the ASCII Characters
 	--> int(input)
 
