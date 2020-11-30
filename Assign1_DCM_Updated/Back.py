@@ -1,7 +1,8 @@
+import struct
 import mysql.connector
 
-mysql_user = "root" #Insert mysql password name here
-mysql_passwd = "root" #Insert mysql password name here 
+mysql_user = "" #Insert mysql password name here
+mysql_passwd = "" #Insert mysql password name here 
 
 db = mysql.connector.connect(
     host="localhost",
@@ -137,28 +138,28 @@ def Change_Attrial_Refractory_Period(name,ARP):
     mycursor.execute("UPDATE Prac SET Attrial_Refractory_Period = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Maximum_Sensor_Rate(name,MSR):
-    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(MSR,name))
+def Change_Maximum_Sensor_Rate(name,ARP):
+    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Activity_Threshold(name,AT):
-    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(AT,name))
+def Change_Activity_Threshold(name,ARP):
+    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Reaction_Time(name,RT):
-    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(RT,name))
+def Change_Reaction_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Response_Factor(name,RF):
-    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(RF,name))
+def Change_Response_Factor(name,ARP):
+    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Recovery_Time(name,RT):
-    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(RT,name))
+def Change_Recovery_Time(name,ARP):
+    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Fixed_AV_Delay(name,FavD):
-    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(FavD,name))
+def Change_Fixed_AV_Delay(name,ARP):
+    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
 ##########################################################################################################
@@ -172,3 +173,22 @@ def Get_Param(name,param):
         return (str(i[-1]))
 
 
+def Serial_Data(name):
+
+    LRL_b = struct.pack("B", int(float(Get_Param(name, 'Lower_Rate_Limit'))))
+    URL_b = struct.pack("B", int(float(Get_Param(name, 'Upper_Rate_Limit'))))
+    MSR_b = struct.pack("B", int(float(Get_Param(name, 'Maximum_Sensor_Rate'))))
+    VENT_AMP_b = struct.pack("f", float(Get_Param(name, 'Ventrical_Amplitude')))
+    VENT_PW_b = struct.pack("f", float(Get_Param(name, 'Ventrical_Pulse_Width')))
+    VRP_b = struct.pack("H", int(float(Get_Param(name, 'Ventrical_Refractory_Period'))))
+    ATR_AMP_b = struct.pack("f", float(Get_Param(name, 'Attrial_Amplitude')))
+    ATR_PW_b = struct.pack("f", float(Get_Param(name, 'Attrial_Pulse_Width')))
+    ARP_b = struct.pack("H", int(float(Get_Param(name, 'Attrial_Refractory_Period'))))
+    A_THRESH_b = struct.pack("B", int(float(Get_Param(name, 'Activity_Threshold'))))
+    REACTION_T_b = struct.pack("B", int(float(Get_Param(name, 'Reaction_Time'))))
+    RESPONSE_FACTOR_b = struct.pack("B", int(float(Get_Param(name, 'Response_Factor'))))
+    RECOVERY_T_b = struct.pack("B", int(float(Get_Param(name, 'Recovery_Time'))))
+    AV_DELAY_b = struct.pack("H", int(float(Get_Param(name, 'Fixed_AV_Delay'))))
+
+    SerialData = LRL_b + URL_b + MSR_b + VENT_AMP_b + VENT_PW_b + VRP_b + ATR_AMP_b + ATR_PW_b + ARP_b + A_THRESH_b + REACTION_T_b + RESPONSE_FACTOR_b + RECOVERY_T_b + AV_DELAY_b
+    return SerialData

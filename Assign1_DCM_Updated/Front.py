@@ -1,3 +1,7 @@
+import serial
+import struct
+from time import sleep
+
 from tkinter import *
 from tkinter import ttk
 import Back
@@ -141,7 +145,7 @@ class NewUser(Frame):
 class HomePage(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font="Helvetica 44")
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -171,7 +175,7 @@ class HomePage(Frame):
 class AOO_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -241,6 +245,10 @@ class AOO_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -279,7 +287,62 @@ class AOO_Mode(Frame):
             self.value5.config(text = Back.Get_Param(loginUSERNAME,'Attrial_Refractory_Period'))
 
     def connect(self, master):
+
+
+    		     #sync\set\noEgram\AOOmode
+    	mode = struct.pack("B", 1)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
     	self.connected_message.config(text= "Connected to pacemaker device.")
+
+    def verify(self, master):
+    	
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.44)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.5)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.56)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.62)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.68)
+    	ARP_Verify = Label(verifyWindow, text="Atrial Refractory Period (ms)")
+    	ARP_Verify.place(relx=0.2, rely=0.74)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.44)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.5)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.56)
+    	AtrAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	AtrAmp_Val.place(relx=0.8, rely=0.62)
+    	AtrPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	AtrPW_Val.place(relx=0.8, rely=0.68)
+    	ARP_Val = Label(verifyWindow, text="")  # ARP
+    	ARP_Val.place(relx=0.8, rely=0.74)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		ARP_Val.config(text = struct.unpack("H",data_r[22:24])[0])
+
+    	
+    	
 
 
 
@@ -289,7 +352,7 @@ class AOO_Mode(Frame):
 class VOO_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -358,6 +421,10 @@ class VOO_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -398,7 +465,53 @@ class VOO_Mode(Frame):
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
 
+    	mode = struct.pack("B", 2)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
 
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.44)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.5)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.56)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventrical Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.62)
+    	Vent_PW_Verify = Label(verifyWindow, text="Ventrical Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.68)
+    	VRP_Verify = Label(verifyWindow, text="Ventrical Refractory Period (ms)")
+    	VRP_Verify.place(relx=0.2, rely=0.74)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.44)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.5)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.56)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.62)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.68)
+    	VRP_Val = Label(verifyWindow, text="")  # ARP
+    	VRP_Val.place(relx=0.8, rely=0.74)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		VRP_Val.config(text = struct.unpack("H",data_r[12:14])[0])
 
 
 
@@ -406,7 +519,7 @@ class VOO_Mode(Frame):
 class AAI_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -475,6 +588,10 @@ class AAI_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -516,6 +633,54 @@ class AAI_Mode(Frame):
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
 
+    	mode = struct.pack("B", 3)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.44)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.5)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.56)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.62)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.68)
+    	ARP_Verify = Label(verifyWindow, text="Atrial Refractory Period (ms)")
+    	ARP_Verify.place(relx=0.2, rely=0.74)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.44)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.5)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.56)
+    	AtrAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	AtrAmp_Val.place(relx=0.8, rely=0.62)
+    	AtrPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	AtrPW_Val.place(relx=0.8, rely=0.68)
+    	ARP_Val = Label(verifyWindow, text="")  # ARP
+    	ARP_Val.place(relx=0.8, rely=0.74)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		ARP_Val.config(text = struct.unpack("H",data_r[22:24])[0])
 
 
 
@@ -524,7 +689,7 @@ class AAI_Mode(Frame):
 class VVI_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -595,6 +760,10 @@ class VVI_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -633,6 +802,55 @@ class VVI_Mode(Frame):
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
+    	mode = struct.pack("B", 4)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.44)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.5)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.56)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventrical Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.62)
+    	Vent_PW_Verify = Label(verifyWindow, text="Ventrical Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.68)
+    	VRP_Verify = Label(verifyWindow, text="Ventrical Refractory Period (ms)")
+    	VRP_Verify.place(relx=0.2, rely=0.74)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.44)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.5)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.56)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.62)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.68)
+    	VRP_Val = Label(verifyWindow, text="")  # ARP
+    	VRP_Val.place(relx=0.8, rely=0.74)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		VRP_Val.config(text = struct.unpack("H",data_r[12:14])[0])
+
+
 
 
 
@@ -642,7 +860,7 @@ class VVI_Mode(Frame):
 class DOO_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -727,6 +945,10 @@ class DOO_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -777,6 +999,63 @@ class DOO_Mode(Frame):
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
+    	mode = struct.pack("B", 5)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.30)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.35)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.40)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventrical Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.45)
+    	Vent_PW_Verify = Label (verifyWindow, text="Ventrical Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.50)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.55)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.60)
+    	AVdelay_Verify = Label(verifyWindow, text="AV Delay (ms)")
+    	AVdelay_Verify.place(relx=0.2, rely=0.65)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.30)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.35)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.40)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.45)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.50)
+    	AtrAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	AtrAmp_Val.place(relx=0.8, rely=0.55)
+    	AtrPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	AtrPW_Val.place(relx=0.8, rely=0.60)
+    	AVdelay_Val = Label(verifyWindow, text="")  # ARP
+    	AVdelay_Val.place(relx=0.8, rely=0.65)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		AVdelay_Val.config(text = struct.unpack("H",data_r[28:30])[0])
 
 
 
@@ -785,7 +1064,7 @@ class DOO_Mode(Frame):
 class AOOR_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -883,6 +1162,10 @@ class AOOR_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -950,6 +1233,76 @@ class AOOR_Mode(Frame):
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
 
+    	mode = struct.pack("B", 6)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.30)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.35)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.40)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.45)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.50)
+    	MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
+    	MSR_Verify.place(relx=0.2, rely=0.55)
+    	AT_Verify = Label(verifyWindow, text="Activity_Threshold")
+    	AT_Verify.place(relx=0.2, rely=0.60)
+    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+    	ReactT_Verify.place(relx=0.2, rely=0.65)
+    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
+    	RespFact_Verify.place(relx=0.2, rely=0.70)
+    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+    	RecovT_Verify.place(relx=0.2, rely=0.75)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.30)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.35)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.40)
+    	AtrAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	AtrAmp_Val.place(relx=0.8, rely=0.45)
+    	AtrPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	AtrPW_Val.place(relx=0.8, rely=0.50)
+    	MSR_Val = Label(verifyWindow, text="")  # ARP
+    	MSR_Val.place(relx=0.8, rely=0.55)
+    	AT_Val = Label(verifyWindow, text="")  # ARP
+    	AT_Val.place(relx=0.8, rely=0.60)
+    	ReactT_Val = Label(verifyWindow, text="")  # ARP
+    	ReactT_Val.place(relx=0.8, rely=0.65)
+    	RespFact_Val = Label(verifyWindow, text="")  # ARP
+    	RespFact_Val.place(relx=0.8, rely=0.70)
+    	RecovT_Val = Label(verifyWindow, text="")  # ARP
+    	RecovT_Val.place(relx=0.8, rely=0.75)
+
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		MSR_Val.config(text = data_r[3])
+    		AT_Val.config(text = data_r[24])
+    		ReactT_Val.config(text = data_r[25])
+    		RespFact_Val.config(text = data_r[26])
+    		RecovT_Val.config(text = data_r[27])
+
 
 
 
@@ -957,7 +1310,7 @@ class AOOR_Mode(Frame):
 class VOOR_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -1057,6 +1410,10 @@ class VOOR_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -1119,6 +1476,75 @@ class VOOR_Mode(Frame):
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
+    	mode = struct.pack("B", 7)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.30)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.35)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.40)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventricular Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.45)
+    	Vent_PW_Verify = Label(verifyWindow, text="Ventricular Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.50)
+    	MSR_Verify = Label(verifyWindow, text="Maximum Sensor Rate (ppm)")
+    	MSR_Verify.place(relx=0.2, rely=0.55)
+    	AT_Verify = Label(verifyWindow, text="Activity Threshold")
+    	AT_Verify.place(relx=0.2, rely=0.60)
+    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+    	ReactT_Verify.place(relx=0.2, rely=0.65)
+    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
+    	RespFact_Verify.place(relx=0.2, rely=0.70)
+    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+    	RecovT_Verify.place(relx=0.2, rely=0.75)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.30)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.35)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.40)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.45)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.50)
+    	MSR_Val = Label(verifyWindow, text="")  # ARP
+    	MSR_Val.place(relx=0.8, rely=0.55)
+    	AT_Val = Label(verifyWindow, text="")  # ARP
+    	AT_Val.place(relx=0.8, rely=0.60)
+    	ReactT_Val = Label(verifyWindow, text="")  # ARP
+    	ReactT_Val.place(relx=0.8, rely=0.65)
+    	RespFact_Val = Label(verifyWindow, text="")  # ARP
+    	RespFact_Val.place(relx=0.8, rely=0.70)
+    	RecovT_Val = Label(verifyWindow, text="")  # ARP
+    	RecovT_Val.place(relx=0.8, rely=0.75)
+
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		MSR_Val.config(text = data_r[3])
+    		AT_Val.config(text = data_r[24])
+    		ReactT_Val.config(text = data_r[25])
+    		RespFact_Val.config(text = data_r[26])
+    		RecovT_Val.config(text = data_r[27])
 
 
 
@@ -1127,7 +1553,7 @@ class VOOR_Mode(Frame):
 class AAIR_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -1233,6 +1659,10 @@ class AAIR_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -1304,6 +1734,79 @@ class AAIR_Mode(Frame):
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
 
+    	mode = struct.pack("B", 8)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.20)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.25)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.30)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.35)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.40)
+    	MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
+    	MSR_Verify.place(relx=0.2, rely=0.45)
+    	AT_Verify = Label(verifyWindow, text="Activity_Threshold")
+    	AT_Verify.place(relx=0.2, rely=0.50)
+    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+    	ReactT_Verify.place(relx=0.2, rely=0.55)
+    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
+    	RespFact_Verify.place(relx=0.2, rely=0.60)
+    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+    	RecovT_Verify.place(relx=0.2, rely=0.65)
+    	ARP_Verify = Label(verifyWindow, text="Atrial Refractory Period (ms)")
+    	ARP_Verify.place(relx=0.2, rely=0.70)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.20)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.25)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.30)
+    	AtrAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	AtrAmp_Val.place(relx=0.8, rely=0.35)
+    	AtrPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	AtrPW_Val.place(relx=0.8, rely=0.40)
+    	MSR_Val = Label(verifyWindow, text="")  # ARP
+    	MSR_Val.place(relx=0.8, rely=0.45)
+    	AT_Val = Label(verifyWindow, text="")  # ARP
+    	AT_Val.place(relx=0.8, rely=0.50)
+    	ReactT_Val = Label(verifyWindow, text="")  # ARP
+    	ReactT_Val.place(relx=0.8, rely=0.55)
+    	RespFact_Val = Label(verifyWindow, text="")  # ARP
+    	RespFact_Val.place(relx=0.8, rely=0.60)
+    	RecovT_Val = Label(verifyWindow, text="")  # ARP
+    	RecovT_Val.place(relx=0.8, rely=0.65)
+    	ARP_Val = Label(verifyWindow, text="")  # ARP
+    	ARP_Val.place(relx=0.8, rely=0.70)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		MSR_Val.config(text = data_r[3])
+    		AT_Val.config(text = data_r[24])
+    		ReactT_Val.config(text = data_r[25])
+    		RespFact_Val.config(text = data_r[26])
+    		RecovT_Val.config(text = data_r[27])
+    		ARP_Val.config(text = struct.unpack("H",data_r[22:24])[0])
+
 
 
 
@@ -1311,7 +1814,7 @@ class AAIR_Mode(Frame):
 class VVIR_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -1418,6 +1921,10 @@ class VVIR_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -1487,6 +1994,79 @@ class VVIR_Mode(Frame):
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
 
+    	mode = struct.pack("B", 9)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.20)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.25)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.30)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventricular Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.35)
+    	Vent_PW_Verify = Label(verifyWindow, text="Ventricular Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.40)
+    	MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
+    	MSR_Verify.place(relx=0.2, rely=0.45)
+    	AT_Verify = Label(verifyWindow, text="Activity_Threshold")
+    	AT_Verify.place(relx=0.2, rely=0.50)
+    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+    	ReactT_Verify.place(relx=0.2, rely=0.55)
+    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
+    	RespFact_Verify.place(relx=0.2, rely=0.60)
+    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+    	RecovT_Verify.place(relx=0.2, rely=0.65)
+    	VRP_Verify = Label(verifyWindow, text="Ventricular Refractory Period (ms)")
+    	VRP_Verify.place(relx=0.2, rely=0.70)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.20)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.25)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.30)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.35)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.40)
+    	MSR_Val = Label(verifyWindow, text="")  # ARP
+    	MSR_Val.place(relx=0.8, rely=0.45)
+    	AT_Val = Label(verifyWindow, text="")  # ARP
+    	AT_Val.place(relx=0.8, rely=0.50)
+    	ReactT_Val = Label(verifyWindow, text="")  # ARP
+    	ReactT_Val.place(relx=0.8, rely=0.55)
+    	RespFact_Val = Label(verifyWindow, text="")  # ARP
+    	RespFact_Val.place(relx=0.8, rely=0.60)
+    	RecovT_Val = Label(verifyWindow, text="")  # ARP
+    	RecovT_Val.place(relx=0.8, rely=0.65)
+    	VRP_Val = Label(verifyWindow, text="")  # ARP
+    	VRP_Val.place(relx=0.8, rely=0.70)
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		MSR_Val.config(text = data_r[3])
+    		AT_Val.config(text = data_r[24])
+    		ReactT_Val.config(text = data_r[25])
+    		RespFact_Val.config(text = data_r[26])
+    		RecovT_Val.config(text = data_r[27])
+    		VRP_Val.config(text = struct.unpack("H",data_r[12:14])[0])
+
 
 
 
@@ -1495,7 +2075,7 @@ class VVIR_Mode(Frame):
 class DOOR_Mode(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
-        self.config(width='800', height='800')
+        self.config(width='800', height='600')
 
         welcome = Label(self, text="Programmable Parameters", font=("Helvetica", 44))
         welcome.place(relx=0.5, rely=0.1, anchor='center')
@@ -1617,6 +2197,10 @@ class DOOR_Mode(Frame):
         connectButton = Button(self, text="Connect", command=lambda: self.connect(master))
         connectButton.place(relx=0.9, rely=0.9)
 
+        #button to verify
+        verifyButton = Button(self, text="Verify", command=lambda: self.verify(master))
+        verifyButton.place(relx=0.1, rely=0.9)
+
         self.connected_message = Label(self,text="", fg='blue', font=("Helvetica", 12))
         self.connected_message.place(relx=0.1, rely=0.95)
 
@@ -1697,6 +2281,91 @@ class DOOR_Mode(Frame):
 
     def connect(self, master):
     	self.connected_message.config(text= "Connected to pacemaker device.")
+
+    	mode = struct.pack("B", 10)
+    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+
+    def verify(self, master):
+    	verifyWindow = Toplevel(master)
+    	verifyWindow.title("Parameters used in the pacemaker")
+    	verifyWindow.geometry("500x500")
+    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+    	Mode_Verify.place(relx=0.2, rely=0.20)
+    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+    	LRL_Verify.place(relx=0.2, rely=0.25)
+    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+    	URL_Verify.place(relx=0.2, rely=0.30)
+    	Vent_amp_Verify = Label(verifyWindow, text="Ventricular Amplitude (V)")
+    	Vent_amp_Verify.place(relx=0.2, rely=0.35)
+    	Vent_PW_Verify = Label(verifyWindow, text="Ventricular Pulse Width (ms)")
+    	Vent_PW_Verify.place(relx=0.2, rely=0.40)
+    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+    	Atr_amp_Verify.place(relx=0.2, rely=0.45)
+    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+    	Atr_PW_Verify.place(relx=0.2, rely=0.50)
+    	MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
+    	MSR_Verify.place(relx=0.2, rely=0.55)
+    	AT_Verify = Label(verifyWindow, text="Activity_Threshold")
+    	AT_Verify.place(relx=0.2, rely=0.60)
+    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+    	ReactT_Verify.place(relx=0.2, rely=0.65)
+    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
+    	RespFact_Verify.place(relx=0.2, rely=0.70)
+    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+    	RecovT_Verify.place(relx=0.2, rely=0.75)
+    	AVdelay_Verify = Label(verifyWindow, text="Ventricular Refractory Period (ms)")
+    	AVdelay_Verify.place(relx=0.2, rely=0.80)
+
+    	Mode_Val = Label(verifyWindow, text="")  #mode
+    	Mode_Val.place(relx=0.8, rely=0.20)
+    	LRL_Val = Label(verifyWindow, text="")  # LRL
+    	LRL_Val.place(relx=0.8, rely=0.25)
+    	URL_Val = Label(verifyWindow, text="")  # URL
+    	URL_Val.place(relx=0.8, rely=0.30)
+    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+    	VentAmp_Val.place(relx=0.8, rely=0.35)
+    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+    	VentPW_Val.place(relx=0.8, rely=0.40)
+    	AtrAmp_Val = Label(verifyWindow, text="")
+    	AtrAmp_Val.place(relx=0.8, rely=0.45)
+    	AtrPW_Val = Label(verifyWindow, text="")
+    	AtrPW_Val.place(relx=0.8, rely=0.50)
+    	MSR_Val = Label(verifyWindow, text="")  # ARP
+    	MSR_Val.place(relx=0.8, rely=0.55)
+    	AT_Val = Label(verifyWindow, text="")  # ARP
+    	AT_Val.place(relx=0.8, rely=0.60)
+    	ReactT_Val = Label(verifyWindow, text="")  # ARP
+    	ReactT_Val.place(relx=0.8, rely=0.65)
+    	RespFact_Val = Label(verifyWindow, text="")  # ARP
+    	RespFact_Val.place(relx=0.8, rely=0.70)
+    	RecovT_Val = Label(verifyWindow, text="")  # ARP
+    	RecovT_Val.place(relx=0.8, rely=0.75)
+    	AVdelay_Val = Label(verifyWindow, text="")
+    	AVdelay_Val.place(relx=0.8, rely=80)
+    	
+    	
+
+    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+
+    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    		ser.write(data)
+    		data_r = ser.read(30)
+    		
+    		Mode_Val.config(text = data_r[0])
+    		LRL_Val.config(text = data_r[1])
+    		URL_Val.config(text = data_r[2])
+    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+    		MSR_Val.config(text = data_r[3])
+    		AT_Val.config(text = data_r[24])
+    		ReactT_Val.config(text = data_r[25])
+    		RespFact_Val.config(text = data_r[26])
+    		RecovT_Val.config(text = data_r[27])
+    		AVdelay_Val.config(text = struct.unpack("H",data_r[28:30])[0])
 
 
 
