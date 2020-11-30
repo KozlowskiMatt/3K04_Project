@@ -138,30 +138,29 @@ def Change_Attrial_Refractory_Period(name,ARP):
     mycursor.execute("UPDATE Prac SET Attrial_Refractory_Period = %s WHERE username = '%s'"%(ARP,name))
     db.commit()
 
-def Change_Maximum_Sensor_Rate(name,ARP):
-    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(ARP,name))
+def Change_Maximum_Sensor_Rate(name,MSR):
+    mycursor.execute("UPDATE Prac SET Maximum_Sensor_Rate = %s WHERE username = '%s'"%(MSR,name))
     db.commit()
 
-def Change_Activity_Threshold(name,ARP):
-    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(ARP,name))
+def Change_Activity_Threshold(name,AT):
+    mycursor.execute("UPDATE Prac SET Activity_Threshold = %s WHERE username = '%s'"%(AT,name))
     db.commit()
 
-def Change_Reaction_Time(name,ARP):
-    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(ARP,name))
+def Change_Reaction_Time(name,RT):
+    mycursor.execute("UPDATE Prac SET Reaction_Time = %s WHERE username = '%s'"%(RT,name))
     db.commit()
 
-def Change_Response_Factor(name,ARP):
-    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(ARP,name))
+def Change_Response_Factor(name,RF):
+    mycursor.execute("UPDATE Prac SET Response_Factor = %s WHERE username = '%s'"%(RF,name))
     db.commit()
 
-def Change_Recovery_Time(name,ARP):
-    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(ARP,name))
+def Change_Recovery_Time(name,RT):
+    mycursor.execute("UPDATE Prac SET Recovery_Time = %s WHERE username = '%s'"%(RT,name))
     db.commit()
 
-def Change_Fixed_AV_Delay(name,ARP):
-    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(ARP,name))
+def Change_Fixed_AV_Delay(name,FavD):
+    mycursor.execute("UPDATE Prac SET Fixed_AV_Delay = %s WHERE username = '%s'"%(FavD,name))
     db.commit()
-
 ##########################################################################################################
 
 
