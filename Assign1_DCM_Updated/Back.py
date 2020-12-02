@@ -189,5 +189,11 @@ def Serial_Data(name):
     RECOVERY_T_b = struct.pack("B", int(float(Get_Param(name, 'Recovery_Time'))))
     AV_DELAY_b = struct.pack("H", int(float(Get_Param(name, 'Fixed_AV_Delay'))))
 
+    #testing
+    print(struct.unpack("f",VENT_AMP_b)[0])
+    print(VENT_AMP_b)
+    print(struct.unpack("f",VENT_PW_b)[0])
+    print(VENT_PW_b)
+
     SerialData = LRL_b + URL_b + MSR_b + VENT_AMP_b + VENT_PW_b + VRP_b + ATR_AMP_b + ATR_PW_b + ARP_b + A_THRESH_b + REACTION_T_b + RESPONSE_FACTOR_b + RECOVERY_T_b + AV_DELAY_b
     return SerialData

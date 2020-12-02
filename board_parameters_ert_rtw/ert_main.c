@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'board_parameters'.
  *
- * Model version                  : 1.118
+ * Model version                  : 1.120
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Tue Dec  1 20:36:31 2020
+ * C/C++ source code generated on : Tue Dec  1 22:14:33 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex

@@ -1,10 +1,11 @@
 import serial
 import struct
 from time import sleep
-data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
+data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 with serial.Serial(port="COM5", baudrate=115200) as ser:  
 	ser.write(data)
+	#sleep(0.1)
 	data_r = ser.read(30)
 
 	mode = data_r[0]

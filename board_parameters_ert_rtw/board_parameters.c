@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'board_parameters'.
  *
- * Model version                  : 1.118
+ * Model version                  : 1.120
  * Simulink Coder version         : 9.4 (R2020b) 29-Jul-2020
- * C/C++ source code generated on : Tue Dec  1 20:36:31 2020
+ * C/C++ source code generated on : Tue Dec  1 22:14:33 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -685,6 +685,7 @@ void board_parameters_step1(void)      /* Sample time: [0.01s, 0.0s] */
     break;
 
    case board_parameter_IN_ECHO_PARAMS1:
+    board_parameters_DW.is_c1_board_parameters = board_parameters_IN_STANDBY;
     break;
 
    case board_parameters_IN_SET_PARAMS:

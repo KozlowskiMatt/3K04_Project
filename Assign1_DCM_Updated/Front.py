@@ -291,8 +291,23 @@ class AOO_Mode(Frame):
 
     		     #sync\set\noEgram\AOOmode
     	mode = struct.pack("B", 1)
-    	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	LRL_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Lower_Rate_Limit'))))
+    	URL_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Upper_Rate_Limit'))))
+    	MSR_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Maximum_Sensor_Rate'))))
+    	VENT_AMP_b = struct.pack("f", float(Back.Get_Param(loginUSERNAME, 'Ventrical_Amplitude')))
+    	VENT_PW_b = struct.pack("f", float(Back.Get_Param(loginUSERNAME, 'Ventrical_Pulse_Width')))
+    	VRP_b = struct.pack("H", int(float(Back.Get_Param(loginUSERNAME, 'Ventrical_Refractory_Period'))))
+    	ATR_AMP_b = struct.pack("f", float(Back.Get_Param(loginUSERNAME, 'Attrial_Amplitude')))
+    	ATR_PW_b = struct.pack("f", float(Back.Get_Param(loginUSERNAME, 'Attrial_Pulse_Width')))
+    	ARP_b = struct.pack("H", int(float(Back.Get_Param(loginUSERNAME, 'Attrial_Refractory_Period'))))
+    	A_THRESH_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Activity_Threshold'))))
+    	REACTION_T_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Reaction_Time'))))
+    	RESPONSE_FACTOR_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Response_Factor'))))
+    	RECOVERY_T_b = struct.pack("B", int(float(Back.Get_Param(loginUSERNAME, 'Recovery_Time'))))
+    	AV_DELAY_b = struct.pack("H", int(float(Back.Get_Param(loginUSERNAME, 'Fixed_AV_Delay'))))
+    	#data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
+    	data = b"\x16\x20\x00" + mode + LRL_b + URL_b + MSR_b + VENT_AMP_b + VENT_PW_b + VRP_b + ATR_AMP_b + ATR_PW_b + ARP_b + A_THRESH_b + REACTION_T_b + RESPONSE_FACTOR_b + RECOVERY_T_b + AV_DELAY_b
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     	self.connected_message.config(text= "Connected to pacemaker device.")
@@ -330,7 +345,7 @@ class AOO_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -467,7 +482,7 @@ class VOO_Mode(Frame):
 
     	mode = struct.pack("B", 2)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -502,7 +517,7 @@ class VOO_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -635,7 +650,7 @@ class AAI_Mode(Frame):
 
     	mode = struct.pack("B", 3)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -671,7 +686,7 @@ class AAI_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -804,7 +819,7 @@ class VVI_Mode(Frame):
     	self.connected_message.config(text= "Connected to pacemaker device.")
     	mode = struct.pack("B", 4)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -839,7 +854,7 @@ class VVI_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -1001,7 +1016,7 @@ class DOO_Mode(Frame):
     	self.connected_message.config(text= "Connected to pacemaker device.")
     	mode = struct.pack("B", 5)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -1044,7 +1059,7 @@ class DOO_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -1235,7 +1250,7 @@ class AOOR_Mode(Frame):
 
     	mode = struct.pack("B", 6)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -1288,7 +1303,7 @@ class AOOR_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -1478,7 +1493,7 @@ class VOOR_Mode(Frame):
     	self.connected_message.config(text= "Connected to pacemaker device.")
     	mode = struct.pack("B", 7)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -1531,7 +1546,7 @@ class VOOR_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -1736,7 +1751,7 @@ class AAIR_Mode(Frame):
 
     	mode = struct.pack("B", 8)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -1791,7 +1806,7 @@ class AAIR_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -1996,7 +2011,7 @@ class VVIR_Mode(Frame):
 
     	mode = struct.pack("B", 9)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
@@ -2051,7 +2066,7 @@ class VVIR_Mode(Frame):
 
     	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
 
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
     		data_r = ser.read(30)
     		
@@ -2284,88 +2299,85 @@ class DOOR_Mode(Frame):
 
     	mode = struct.pack("B", 10)
     	data = b"\x16\x20\x00" + mode + Back.Serial_Data(loginUSERNAME)
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
+    	with serial.Serial(port="COM5", baudrate=115200) as ser:
     		ser.write(data)
 
     def verify(self, master):
-    	verifyWindow = Toplevel(master)
-    	verifyWindow.title("Parameters used in the pacemaker")
-    	verifyWindow.geometry("500x500")
-    	Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
-    	Mode_Verify.place(relx=0.2, rely=0.20)
-    	LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
-    	LRL_Verify.place(relx=0.2, rely=0.25)
-    	URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
-    	URL_Verify.place(relx=0.2, rely=0.30)
-    	Vent_amp_Verify = Label(verifyWindow, text="Ventricular Amplitude (V)")
-    	Vent_amp_Verify.place(relx=0.2, rely=0.35)
-    	Vent_PW_Verify = Label(verifyWindow, text="Ventricular Pulse Width (ms)")
-    	Vent_PW_Verify.place(relx=0.2, rely=0.40)
-    	Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
-    	Atr_amp_Verify.place(relx=0.2, rely=0.45)
-    	Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
-    	Atr_PW_Verify.place(relx=0.2, rely=0.50)
-    	MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
-    	MSR_Verify.place(relx=0.2, rely=0.55)
-    	AT_Verify = Label(verifyWindow, text="Activity_Threshold")
-    	AT_Verify.place(relx=0.2, rely=0.60)
-    	ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
-    	ReactT_Verify.place(relx=0.2, rely=0.65)
-    	RespFact_Verify = Label(verifyWindow, text="Response Factor")
-    	RespFact_Verify.place(relx=0.2, rely=0.70)
-    	RecovT_Verify = Label(verifyWindow, text="Recovery Time")
-    	RecovT_Verify.place(relx=0.2, rely=0.75)
-    	AVdelay_Verify = Label(verifyWindow, text="Ventricular Refractory Period (ms)")
-    	AVdelay_Verify.place(relx=0.2, rely=0.80)
+        verifyWindow = Toplevel(master)
+        verifyWindow.title("Parameters used in the pacemaker")
+        verifyWindow.geometry("500x500")
+        Mode_Verify = Label(verifyWindow, text="Mode (1-10)")
+        Mode_Verify.place(relx=0.2, rely=0.20)
+        LRL_Verify = Label(verifyWindow, text="Lower Rate Limit (ppm)")
+        LRL_Verify.place(relx=0.2, rely=0.25)
+        URL_Verify = Label(verifyWindow, text="Upper Rate Limit (ppm)")
+        URL_Verify.place(relx=0.2, rely=0.30)
+        Vent_amp_Verify = Label(verifyWindow, text="Ventricular Amplitude (V)")
+        Vent_amp_Verify.place(relx=0.2, rely=0.35)
+        Vent_PW_Verify = Label(verifyWindow, text="Ventricular Pulse Width (ms)")
+        Vent_PW_Verify.place(relx=0.2, rely=0.40)
+        Atr_amp_Verify = Label(verifyWindow, text="Atrial Amplitude (V)")
+        Atr_amp_Verify.place(relx=0.2, rely=0.45)
+        Atr_PW_Verify = Label(verifyWindow, text="Atrial Pulse Width (ms)")
+        Atr_PW_Verify.place(relx=0.2, rely=0.50)
+        MSR_Verify = Label(verifyWindow, text="Maximum_Sensor_Rate (ppm)")
+        MSR_Verify.place(relx=0.2, rely=0.55)
+        AT_Verify = Label(verifyWindow, text="Activity_Threshold")
+        AT_Verify.place(relx=0.2, rely=0.60)
+        ReactT_Verify = Label(verifyWindow, text="Reaction Time (sec)")
+        ReactT_Verify.place(relx=0.2, rely=0.65)
+        RespFact_Verify = Label(verifyWindow, text="Response Factor")
+        RespFact_Verify.place(relx=0.2, rely=0.70)
+        RecovT_Verify = Label(verifyWindow, text="Recovery Time")
+        RecovT_Verify.place(relx=0.2, rely=0.75)
+        AVdelay_Verify = Label(verifyWindow, text="AV Delay (ms)")
+        AVdelay_Verify.place(relx=0.2, rely=0.80)
 
-    	Mode_Val = Label(verifyWindow, text="")  #mode
-    	Mode_Val.place(relx=0.8, rely=0.20)
-    	LRL_Val = Label(verifyWindow, text="")  # LRL
-    	LRL_Val.place(relx=0.8, rely=0.25)
-    	URL_Val = Label(verifyWindow, text="")  # URL
-    	URL_Val.place(relx=0.8, rely=0.30)
-    	VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
-    	VentAmp_Val.place(relx=0.8, rely=0.35)
-    	VentPW_Val = Label(verifyWindow, text="")  # ATR PW
-    	VentPW_Val.place(relx=0.8, rely=0.40)
-    	AtrAmp_Val = Label(verifyWindow, text="")
-    	AtrAmp_Val.place(relx=0.8, rely=0.45)
-    	AtrPW_Val = Label(verifyWindow, text="")
-    	AtrPW_Val.place(relx=0.8, rely=0.50)
-    	MSR_Val = Label(verifyWindow, text="")  # ARP
-    	MSR_Val.place(relx=0.8, rely=0.55)
-    	AT_Val = Label(verifyWindow, text="")  # ARP
-    	AT_Val.place(relx=0.8, rely=0.60)
-    	ReactT_Val = Label(verifyWindow, text="")  # ARP
-    	ReactT_Val.place(relx=0.8, rely=0.65)
-    	RespFact_Val = Label(verifyWindow, text="")  # ARP
-    	RespFact_Val.place(relx=0.8, rely=0.70)
-    	RecovT_Val = Label(verifyWindow, text="")  # ARP
-    	RecovT_Val.place(relx=0.8, rely=0.75)
-    	AVdelay_Val = Label(verifyWindow, text="")
-    	AVdelay_Val.place(relx=0.8, rely=80)
-    	
-    	
+        Mode_Val = Label(verifyWindow, text="")  #mode
+        Mode_Val.place(relx=0.8, rely=0.20)
+        LRL_Val = Label(verifyWindow, text="")  # LRL
+        LRL_Val.place(relx=0.8, rely=0.25)
+        URL_Val = Label(verifyWindow, text="")  # URL
+        URL_Val.place(relx=0.8, rely=0.30)
+        VentAmp_Val = Label(verifyWindow, text="")  # ATR AMP
+        VentAmp_Val.place(relx=0.8, rely=0.35)
+        VentPW_Val = Label(verifyWindow, text="")  # ATR PW
+        VentPW_Val.place(relx=0.8, rely=0.40)
+        AtrAmp_Val = Label(verifyWindow, text="")
+        AtrAmp_Val.place(relx=0.8, rely=0.45)
+        AtrPW_Val = Label(verifyWindow, text="")
+        AtrPW_Val.place(relx=0.8, rely=0.50)
+        MSR_Val = Label(verifyWindow, text="")  # ARP
+        MSR_Val.place(relx=0.8, rely=0.55)
+        AT_Val = Label(verifyWindow, text="")  # ARP
+        AT_Val.place(relx=0.8, rely=0.60)
+        ReactT_Val = Label(verifyWindow, text="")  # ARP
+        ReactT_Val.place(relx=0.8, rely=0.65)
+        RespFact_Val = Label(verifyWindow, text="")  # ARP
+        RespFact_Val.place(relx=0.8, rely=0.70)
+        RecovT_Val = Label(verifyWindow, text="")  # ARP
+        RecovT_Val.place(relx=0.8, rely=0.75)
+        AVdelay_Val = Label(verifyWindow, text="")
+        AVdelay_Val.place(relx=0.8, rely=0.80)
 
-    	data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
-
-    	with serial.Serial(port="COM6", baudrate=115200) as ser:
-    		ser.write(data)
-    		data_r = ser.read(30)
-    		
-    		Mode_Val.config(text = data_r[0])
-    		LRL_Val.config(text = data_r[1])
-    		URL_Val.config(text = data_r[2])
-    		VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
-    		VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
-    		AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
-    		AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
-    		MSR_Val.config(text = data_r[3])
-    		AT_Val.config(text = data_r[24])
-    		ReactT_Val.config(text = data_r[25])
-    		RespFact_Val.config(text = data_r[26])
-    		RecovT_Val.config(text = data_r[27])
-    		AVdelay_Val.config(text = struct.unpack("H",data_r[28:30])[0])
+        data = b"\x16\x10\x00" + b"\x00"*30 #send parameters back, NO egram
+        with serial.Serial(port="COM5", baudrate=115200) as ser:
+           ser.write(data)
+           data_r = ser.read(30)
+           
+           Mode_Val.config(text = data_r[0])
+           LRL_Val.config(text = data_r[1])
+           URL_Val.config(text = data_r[2])
+           VentAmp_Val.config(text = struct.unpack("f",data_r[4:8])[0])
+           VentPW_Val.config(text = struct.unpack("f",data_r[8:12])[0])
+           AtrAmp_Val.config(text = struct.unpack("f",data_r[14:18])[0])
+           AtrPW_Val.config(text = struct.unpack("f",data_r[18:22])[0])
+           MSR_Val.config(text = data_r[3])
+           AT_Val.config(text = data_r[24])
+           ReactT_Val.config(text = data_r[25])
+           RespFact_Val.config(text = data_r[26])
+           RecovT_Val.config(text = data_r[27])
+           AVdelay_Val.config(text = struct.unpack("H",data_r[28:30])[0])
 
 
 
