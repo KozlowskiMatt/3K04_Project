@@ -1,8 +1,8 @@
 import struct
 import mysql.connector
 
-mysql_user = "" #Insert mysql password name here
-mysql_passwd = "" #Insert mysql password name here 
+mysql_user = "root" #Insert mysql password name here
+mysql_passwd = "root" #Insert mysql password name here 
 
 db = mysql.connector.connect(
     host="localhost",
